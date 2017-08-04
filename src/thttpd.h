@@ -395,4 +395,4 @@
 */
 #define MIN_WOULDBLOCK_DELAY 100L
 
-#endif /* _THTTPD_H_ */
+#endif                          /* _THTTPD_H_ */

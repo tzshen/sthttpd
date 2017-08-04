@@ -6,4 +6,4 @@
 #define SERVER_SOFTWARE "sthttpd/2.27.0 03oct2014"
 #define SERVER_ADDRESS "http://localhost"
 
-#endif /* _VERSION_H_ */
+#endif                          /* _VERSION_H_ */
