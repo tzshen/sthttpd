@@ -91,8 +91,8 @@ This is probably a configuration error.\n", dirname);
         (void) chown(dirname, -1, gid);
     } else {
         /* The directory already exists.  Well, check that it is in
-         ** fact a directory.
-         */
+        ** fact a directory.
+        */
         if (!S_ISDIR(sb.st_mode)) {
             (void) printf("%s already exists but is not a directory!\n",
                           dirname);
@@ -137,8 +137,8 @@ int main(int argc, char **argv)
 #ifdef TILDE_MAP_2
 
     /* All we have to do for the TILDE_MAP_2 case is make sure there's
-     ** a public_html subdirectory.
-     */
+    ** a public_html subdirectory.
+    */
     check_room(sizeof(dirname), strlen(homedir) + strlen(TILDE_MAP_2) + 2);
     (void) strcpy(dirname, homedir);
     end_with_slash(dirname);
@@ -195,8 +195,8 @@ This is probably a configuration error.\n", linkname);
         (void) printf("Created symbolic link %s\n", linkname);
     } else {
         /* The link already exists.  Well, check that it is in
-         ** fact a link.
-         */
+        ** fact a link.
+        */
         if (!S_ISLNK(sb.st_mode)) {
             (void) printf("\
 %s already exists but is not a\n\

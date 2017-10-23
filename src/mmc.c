@@ -176,8 +176,8 @@ void *mmc_map(char *filename, struct stat *sbP, struct timeval *nowP)
     m->reftime = now;
 
     /* Avoid doing anything for zero-length files; some systems don't like
-     ** to mmap them, other systems dislike mallocing zero bytes.
-     */
+    ** to mmap them, other systems dislike mallocing zero bytes.
+    */
     if (m->size == 0)
         m->addr = (void *) 1;   /* arbitrary non-NULL address */
     else {
@@ -187,8 +187,8 @@ void *mmc_map(char *filename, struct stat *sbP, struct timeval *nowP)
         m->addr = mmap(0, size_size, PROT_READ, MAP_PRIVATE, fd, 0);
         if (m->addr == (void *) -1 && errno == ENOMEM) {
             /* Ooo, out of address space.  Free all unreferenced maps
-             ** and try again.
-             */
+            ** and try again.
+            */
             panic();
             m->addr = mmap(0, size_size, PROT_READ, MAP_PRIVATE, fd, 0);
         }
@@ -204,8 +204,8 @@ void *mmc_map(char *filename, struct stat *sbP, struct timeval *nowP)
         m->addr = (void *) malloc(size_size);
         if (m->addr == (void *) 0) {
             /* Ooo, out of memory.  Free all unreferenced maps
-             ** and try again.
-             */
+            ** and try again.
+            */
             panic();
             m->addr = (void *) malloc(size_size);
         }
@@ -300,8 +300,8 @@ void mmc_cleanup(struct timeval *nowP)
     }
 
     /* Adjust the age limit if there are too many bytes mapped, or
-     ** too many or too few files mapped.
-     */
+    ** too many or too few files mapped.
+    */
     if (mapped_bytes > DESIRED_MAX_MAPPED_BYTES)
         expire_age = MAX((expire_age * 2) / 3, DEFAULT_EXPIRE_AGE / 10);
     else if (map_count > DESIRED_MAX_MAPPED_FILES)
@@ -360,8 +360,8 @@ static void really_unmap(Map ** mm)
     free_maps = m;
     ++free_count;
     /* This will sometimes break hash chains, but that's harmless; the
-     ** unmapping code that searches the hash table knows to keep searching.
-     */
+    ** unmapping code that searches the hash table knows to keep searching.
+    */
     hash_table[m->hash_idx] = (Map *) 0;
 }
 

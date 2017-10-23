@@ -1,6 +1,6 @@
 /* thttpd.c - tiny/turbo/throttling HTTP server
 **
-** Copyright © 1995,1998,1999,2000,2001 by Jef Poskanzer <jef@mail.acme.com>.
+** Copyright ?1995,1998,1999,2000,2001 by Jef Poskanzer <jef@mail.acme.com>.
 ** All rights reserved.
 **
 ** Redistribution and use in source and binary forms, with or without
@@ -207,18 +207,18 @@ static void handle_chld(int sig)
             if (errno == EINTR || errno == EAGAIN)
                 continue;
             /* ECHILD shouldn't happen with the WNOHANG option,
-             ** but with some kernels it does anyway.  Ignore it.
-             */
+            ** but with some kernels it does anyway.  Ignore it.
+            */
             if (errno != ECHILD)
                 syslog(LOG_ERR, "child wait - %m");
             break;
         }
         /* Decrement the CGI count.  Note that this is not accurate, since
-         ** each CGI can involve two or even three child processes.
-         ** Decrementing for each child means that when there is heavy CGI
-         ** activity, the count will be lower than it should be, and therefore
-         ** more CGIs will be allowed than should be.
-         */
+        ** each CGI can involve two or even three child processes.
+        ** Decrementing for each child means that when there is heavy CGI
+        ** activity, the count will be lower than it should be, and therefore
+        ** more CGIs will be allowed than should be.
+        */
         if (hs != (httpd_server *) 0) {
             --hs->cgi_count;
             if (hs->cgi_count < 0)
@@ -256,9 +256,9 @@ static void handle_usr1(int sig)
 
     if (num_connects == 0) {
         /* If there are no active connections we want to exit immediately
-         ** here.  Not only is it faster, but without any connections the
-         ** main loop won't wake up until the next new connection.
-         */
+        ** here.  Not only is it faster, but without any connections the
+        ** main loop won't wake up until the next new connection.
+        */
         shut_down();
         syslog(LOG_NOTICE, "exiting");
         closelog();
@@ -388,8 +388,8 @@ int main(int argc, char **argv)
         read_throttlefile(throttlefile);
 
     /* If we're root and we're going to become another user, get the uid/gid
-     ** now.
-     */
+    ** now.
+    */
     if (getuid() == 0) {
         pwd = getpwnam(user);
         if (pwd == (struct passwd *) 0) {
@@ -427,8 +427,8 @@ int main(int argc, char **argv)
             (void) fcntl(fileno(logfp), F_SETFD, 1);
             if (getuid() == 0) {
                 /* If we are root then we chown the log file to the user we'll
-                 ** be switching to.
-                 */
+                ** be switching to.
+                */
                 if (fchown(fileno(logfp), uid, gid) < 0) {
                     syslog(LOG_WARNING, "fchown logfile - %m");
                     perror("fchown logfile");
@@ -449,9 +449,9 @@ int main(int argc, char **argv)
 #ifdef USE_USER_DIR
     else if (getuid() == 0) {
         /* No explicit directory was specified, we're root, and the
-         ** USE_USER_DIR option is set - switch to the specified user's
-         ** home dir.
-         */
+        ** USE_USER_DIR option is set - switch to the specified user's
+        ** home dir.
+        */
         if (chdir(pwd->pw_dir) < 0) {
             syslog(LOG_CRIT, "chdir - %m");
             perror("chdir");
@@ -467,8 +467,8 @@ int main(int argc, char **argv)
 
     if (!debug) {
         /* We're not going to use stdin stdout or stderr from here on, so close
-         ** them to save file descriptors.
-         */
+        ** them to save file descriptors.
+        */
         (void) fclose(stdin);
         if (logfp != stdout)
             (void) fclose(stdout);
@@ -496,8 +496,8 @@ int main(int argc, char **argv)
 #endif                          /* HAVE_DAEMON */
     } else {
         /* Even if we don't daemonize, we still want to disown our parent
-         ** process.
-         */
+        ** process.
+        */
 #ifdef HAVE_SETSID
         (void) setsid();
 #endif                          /* HAVE_SETSID */
@@ -515,8 +515,8 @@ int main(int argc, char **argv)
     }
 
     /* Initialize the fdwatch package.  Have to do this before chroot,
-     ** if /dev/poll is used.
-     */
+    ** if /dev/poll is used.
+    */
     max_connects = fdwatch_get_nfiles();
     if (max_connects < 0) {
         syslog(LOG_CRIT, "fdwatch initialization failure");
@@ -532,18 +532,18 @@ int main(int argc, char **argv)
             exit(1);
         }
         /* If we're logging and the logfile's pathname begins with the
-         ** chroot tree's pathname, then elide the chroot pathname so
-         ** that the logfile pathname still works from inside the chroot
-         ** tree.
-         */
+        ** chroot tree's pathname, then elide the chroot pathname so
+        ** that the logfile pathname still works from inside the chroot
+        ** tree.
+        */
         if (logfile != (char *) 0 && strcmp(logfile, "-") != 0) {
             if (strncmp(logfile, cwd, strlen(cwd)) == 0) {
                 (void) memmove(logfile, &logfile[strlen(cwd) - 1],
                                strlen(logfile) - (strlen(cwd) - 1) + 1);
                 /* (We already guaranteed that cwd ends with a slash, so leaving
-                 ** that slash in logfile makes it an absolute pathname within
-                 ** the chroot tree.)
-                 */
+                ** that slash in logfile makes it an absolute pathname within
+                ** the chroot tree.)
+                */
             } else {
                 syslog(LOG_WARNING,
                        "logfile is not within the chroot tree, you will not be able to re-open it");
@@ -599,8 +599,8 @@ int main(int argc, char **argv)
     tmr_init();
 
     /* Initialize the HTTP layer.  Got to do this before giving up root,
-     ** so that we can bind to a privileged port.
-     */
+    ** so that we can bind to a privileged port.
+    */
     hs = httpd_initialize(hostname,
                           gotv4 ? &sa4 : (httpd_sockaddr *) 0,
                           gotv6 ? &sa6 : (httpd_sockaddr *) 0, port,
@@ -731,18 +731,18 @@ int main(int argc, char **argv)
             fdwatch_check_fd(hs->listen6_fd)) {
             if (handle_newconnect(&tv, hs->listen6_fd))
                 /* Go around the loop and do another fdwatch, rather than
-                 ** dropping through and processing existing connections.
-                 ** New connections always get priority.
-                 */
+                ** dropping through and processing existing connections.
+                ** New connections always get priority.
+                */
                 continue;
         }
         if (hs != (httpd_server *) 0 && hs->listen4_fd != -1 &&
             fdwatch_check_fd(hs->listen4_fd)) {
             if (handle_newconnect(&tv, hs->listen4_fd))
                 /* Go around the loop and do another fdwatch, rather than
-                 ** dropping through and processing existing connections.
-                 ** New connections always get priority.
-                 */
+                ** dropping through and processing existing connections.
+                ** New connections always get priority.
+                */
                 continue;
         }
 
@@ -1339,16 +1339,16 @@ static int handle_newconnect(struct timeval *tvP, int listen_fd)
     ClientData client_data;
 
     /* This loops until the accept() fails, trying to start new
-     ** connections as fast as possible so we don't overrun the
-     ** listen queue.
-     */
+    ** connections as fast as possible so we don't overrun the
+    ** listen queue.
+    */
     for (;;) {
         /* Is there room in the connection table? */
         if (num_connects >= max_connects) {
             /* Out of connection slots.  Run the timers, then the
-             ** existing connections, and maybe we'll free up a slot
-             ** by the time we get back here.
-             */
+            ** existing connections, and maybe we'll free up a slot
+            ** by the time we get back here.
+            */
             syslog(LOG_WARNING, "too many connections!");
             tmr_run(tvP);
             return 0;
@@ -1374,8 +1374,8 @@ static int handle_newconnect(struct timeval *tvP, int listen_fd)
         /* Get the connection. */
         switch (httpd_get_conn(hs, listen_fd, c->hc)) {
             /* Some error happened.  Run the timers, then the
-             ** existing connections.  Maybe the error will clear.
-             */
+            ** existing connections.  Maybe the error will clear.
+            */
         case GC_FAIL:
             tmr_run(tvP);
             return 0;
@@ -1437,10 +1437,10 @@ static void handle_read(connecttab * c, struct timeval *tvP)
     }
     if (sz < 0) {
         /* Ignore EINTR and EAGAIN.  Also ignore EWOULDBLOCK.  At first glance
-         ** you would think that connections returned by fdwatch as readable
-         ** should never give an EWOULDBLOCK; however, this apparently can
-         ** happen if a packet gets garbled.
-         */
+        ** you would think that connections returned by fdwatch as readable
+        ** should never give an EWOULDBLOCK; however, this apparently can
+        ** happen if a packet gets garbled.
+        */
         if (errno == EINTR || errno == EAGAIN || errno == EWOULDBLOCK)
             return;
         httpd_send_err(hc, 400, httpd_err400title, "", httpd_err400form,
@@ -1540,8 +1540,8 @@ static void handle_send(connecttab * c, struct timeval *tvP)
                    MIN(c->end_byte_index - c->next_byte_index, max_bytes));
     } else {
         /* Yes.  We'll combine headers and file into a single writev(),
-         ** hoping that this generates a single packet.
-         */
+        ** hoping that this generates a single packet.
+        */
         struct iovec iv[2];
 
         iv[0].iov_base = hc->response;
@@ -1557,15 +1557,15 @@ static void handle_send(connecttab * c, struct timeval *tvP)
 
     if (sz == 0 || (sz < 0 && (errno == EWOULDBLOCK || errno == EAGAIN))) {
         /* This shouldn't happen, but some kernels, e.g.
-         ** SunOS 4.1.x, are broken and select() says that
-         ** O_NDELAY sockets are always writable even when
-         ** they're actually not.
-         **
-         ** Current workaround is to block sending on this
-         ** socket for a brief adaptively-tuned period.
-         ** Fortunately we already have all the necessary
-         ** blocking code, for use with throttling.
-         */
+        ** SunOS 4.1.x, are broken and select() says that
+        ** O_NDELAY sockets are always writable even when
+        ** they're actually not.
+        **
+        ** Current workaround is to block sending on this
+        ** socket for a brief adaptively-tuned period.
+        ** Fortunately we already have all the necessary
+        ** blocking code, for use with throttling.
+        */
         c->wouldblock_delay += MIN_WOULDBLOCK_DELAY;
         c->conn_state = CNST_PAUSING;
         fdwatch_del_fd(hc->conn_fd);
@@ -1584,16 +1584,16 @@ static void handle_send(connecttab * c, struct timeval *tvP)
 
     if (sz < 0) {
         /* Something went wrong, close this connection.
-         **
-         ** If it's just an EPIPE, don't bother logging, that
-         ** just means the client hung up on us.
-         **
-         ** On some systems, write() occasionally gives an EINVAL.
-         ** Dunno why, something to do with the socket going
-         ** bad.  Anyway, we don't log those either.
-         **
-         ** And ECONNRESET isn't interesting either.
-         */
+        **
+        ** If it's just an EPIPE, don't bother logging, that
+        ** just means the client hung up on us.
+        **
+        ** On some systems, write() occasionally gives an EINVAL.
+        ** Dunno why, something to do with the socket going
+        ** bad.  Anyway, we don't log those either.
+        **
+        ** And ECONNRESET isn't interesting either.
+        */
         if (errno != EPIPE && errno != EINVAL && errno != ECONNRESET)
             syslog(LOG_ERR, "write - %m sending %.80s", hc->encodedurl);
         clear_connection(c, tvP);
@@ -1668,8 +1668,8 @@ static void handle_linger(connecttab * c, struct timeval *tvP)
     int r;
 
     /* In lingering-close mode we just read and ignore bytes.  An error
-     ** or EOF ends things, otherwise we go until a timeout.
-     */
+    ** or EOF ends things, otherwise we go until a timeout.
+    */
     r = read(c->hc->conn_fd, buf, sizeof(buf));
     if (r < 0 && (errno == EINTR || errno == EAGAIN))
         return;
@@ -1733,8 +1733,8 @@ static void update_throttles(ClientData client_data, struct timeval *nowP)
     long l;
 
     /* Update the average sending rate for each throttle.  This is only used
-     ** when new connections start up.
-     */
+    ** when new connections start up.
+    */
     for (tnum = 0; tnum < numthrottles; ++tnum) {
         throttles[tnum].rate =
             (2 * throttles[tnum].rate +
@@ -1766,8 +1766,8 @@ static void update_throttles(ClientData client_data, struct timeval *nowP)
     }
 
     /* Now update the sending rate on all the currently-sending connections,
-     ** redistributing it evenly.
-     */
+    ** redistributing it evenly.
+    */
     for (cnum = 0; cnum < max_connects; ++cnum) {
         c = &connects[cnum];
         if (c->conn_state == CNST_SENDING || c->conn_state == CNST_PAUSING) {
@@ -1806,16 +1806,16 @@ static void clear_connection(connecttab * c, struct timeval *tvP)
     }
 
     /* This is our version of Apache's lingering_close() routine, which is
-     ** their version of the often-broken SO_LINGER socket option.  For why
-     ** this is necessary, see http://www.apache.org/docs/misc/fin_wait_2.html
-     ** What we do is delay the actual closing for a few seconds, while reading
-     ** any bytes that come over the connection.  However, we don't want to do
-     ** this unless it's necessary, because it ties up a connection slot and
-     ** file descriptor which means our maximum connection-handling rate
-     ** is lower.  So, elsewhere we set a flag when we detect the few
-     ** circumstances that make a lingering close necessary.  If the flag
-     ** isn't set we do the real close now.
-     */
+    ** their version of the often-broken SO_LINGER socket option.  For why
+    ** this is necessary, see http://www.apache.org/docs/misc/fin_wait_2.html
+    ** What we do is delay the actual closing for a few seconds, while reading
+    ** any bytes that come over the connection.  However, we don't want to do
+    ** this unless it's necessary, because it ties up a connection slot and
+    ** file descriptor which means our maximum connection-handling rate
+    ** is lower.  So, elsewhere we set a flag when we detect the few
+    ** circumstances that make a lingering close necessary.  If the flag
+    ** isn't set we do the real close now.
+    */
     if (c->conn_state == CNST_LINGERING) {
         /* If we were already lingering, shut down for real. */
         tmr_cancel(c->linger_timer);

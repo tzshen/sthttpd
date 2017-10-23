@@ -197,9 +197,9 @@ time_t tdate_parse(char *str)
         continue;
 
     /* And do the sscanfs.  WARNING: you can add more formats here,
-     ** but be careful!  You can easily screw up the parsing of existing
-     ** formats when you add new ones.  The order is important.
-     */
+    ** but be careful!  You can easily screw up the parsing of existing
+    ** formats when you add new ones.  The order is important.
+    */
 
     /* DD-mth-YY HH:MM:SS GMT */
     if (sscanf(cp, "%d-%400[a-zA-Z]-%d %d:%d:%d GMT",

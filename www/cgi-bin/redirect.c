@@ -133,8 +133,8 @@ int main(int argc, char **argv)
     argv0 = argv[0];
 
     /* Get the name that we were run as, which is the filename being
-     ** redirected.
-     */
+    ** redirected.
+    */
     script_name = getenv("SCRIPT_NAME");
     if (script_name == (char *) 0) {
         internal_error("Couldn't get SCRIPT_NAME environment variable.");
@@ -142,8 +142,8 @@ int main(int argc, char **argv)
     }
 
     /* Append the PATH_INFO, if any.  This allows redirection of whole
-     ** directories.
-     */
+    ** directories.
+    */
     path_info = getenv("PATH_INFO");
     if (path_info != (char *) 0) {
         cp = (char *) malloc(strlen(script_name) + strlen(path_info) + 1);

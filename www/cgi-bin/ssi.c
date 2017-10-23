@@ -157,13 +157,13 @@ get_filename(char *vfilename, char *filename, char *directive, char *tag,
     char *cp;
 
     /* Used for the various commands that accept a file name.
-     ** These commands accept two tags:
-     **   virtual
-     **     Gives a virtual path to a document on the server.
-     **   file
-     **     Gives a pathname relative to the current directory. ../ cannot
-     **     be used in this pathname, nor can absolute paths be used.
-     */
+    ** These commands accept two tags:
+    **   virtual
+    **     Gives a virtual path to a document on the server.
+    **   file
+    **     Gives a pathname relative to the current directory. ../ cannot
+    **     be used in this pathname, nor can absolute paths be used.
+    */
     vl = strlen(vfilename);
     fl = strlen(filename);
     if (strcmp(tag, "virtual") == 0) {
@@ -235,10 +235,10 @@ static int check_filename(char *filename)
         return 0;
 
     /* Check for an auth file in the same directory.  We can't do an actual
-     ** auth password check here because CGI programs are not given the
-     ** authorization header, for security reasons.  So instead we just
-     ** prohibit access to all auth-protected files.
-     */
+    ** auth password check here because CGI programs are not given the
+    ** authorization header, for security reasons.  So instead we just
+    ** prohibit access to all auth-protected files.
+    */
     dirname = strdup(filename);
     if (dirname == (char *) 0)
         return 0;               /* out of memory */
@@ -307,16 +307,16 @@ do_config(char *vfilename, char *filename, FILE * fp, char *directive,
           char *tag, char *val)
 {
     /* The config directive controls various aspects of the file parsing.
-     ** There are two valid tags:
-     **   timefmt
-     **     Gives the server a new format to use when providing dates.  This
-     **     is a string compatible with the strftime library call.
-     **   sizefmt
-     **     Determines the formatting to be used when displaying the size of
-     **     a file.  Valid choices are bytes, for a formatted byte count
-     **     (formatted as 1,234,567), or abbrev for an abbreviated version
-     **     displaying the number of kilobytes or megabytes the file occupies.
-     */
+    ** There are two valid tags:
+    **   timefmt
+    **     Gives the server a new format to use when providing dates.  This
+    **     is a string compatible with the strftime library call.
+    **   sizefmt
+    **     Determines the formatting to be used when displaying the size of
+    **     a file.  Valid choices are bytes, for a formatted byte count
+    **     (formatted as 1,234,567), or abbrev for an abbreviated version
+    **     displaying the number of kilobytes or megabytes the file occupies.
+    */
 
     if (strcmp(tag, "timefmt") == 0) {
         (void) strncpy(timefmt, val, sizeof(timefmt) - 1);
@@ -390,9 +390,9 @@ do_echo(char *vfilename, char *filename, FILE * fp, char *directive,
     time_t t;
 
     /* Prints the value of one of the include variables.  Any dates are
-     ** printed subject to the currently configured timefmt.  The only valid
-     ** tag is var, whose value is the name of the variable you wish to echo.
-     */
+    ** printed subject to the currently configured timefmt.  The only valid
+    ** tag is var, whose value is the name of the variable you wish to echo.
+    */
 
     if (strcmp(tag, "var") != 0)
         unknown_tag(filename, directive, tag);
@@ -599,8 +599,8 @@ static void read_file(char *vfilename, char *filename, FILE * fp)
     int state;
 
     /* Copy it to output, while running a state-machine to look for
-     ** SSI directives.
-     */
+    ** SSI directives.
+    */
     state = ST_GROUND;
     while ((ich = getc(fp)) != EOF) {
         switch (state) {

@@ -54,10 +54,10 @@ static struct timeval tv_diff;  /* system time - monotonic difference at start *
 static unsigned int hash(Timer * t)
 {
     /* We can hash on the trigger time, even though it can change over
-     ** the life of a timer via either the periodic bit or the tmr_reset()
-     ** call.  This is because both of those guys call l_resort(), which
-     ** recomputes the hash and moves the timer to the appropriate list.
-     */
+    ** the life of a timer via either the periodic bit or the tmr_reset()
+    ** call.  This is because both of those guys call l_resort(), which
+    ** recomputes the hash and moves the timer to the appropriate list.
+    */
     return ((unsigned int) t->time.tv_sec ^
             (unsigned int) t->time.tv_usec) % HASH_SIZE;
 }
@@ -225,8 +225,8 @@ long tmr_mstimeout(struct timeval *nowP)
     gotone = 0;
     msecs = 0;                  /* make lint happy */
     /* Since the lists are sorted, we only need to look at the
-     ** first timer on each one.
-     */
+    ** first timer on each one.
+    */
     for (h = 0; h < HASH_SIZE; ++h) {
         t = timers[h];
         if (t != (Timer *) 0) {
@@ -257,8 +257,8 @@ void tmr_run(struct timeval *nowP)
         for (t = timers[h]; t != (Timer *) 0; t = next) {
             next = t->next;
             /* Since the lists are sorted, as soon as we find a timer
-             ** that isn't ready yet, we can go on to the next list.
-             */
+            ** that isn't ready yet, we can go on to the next list.
+            */
             if (t->time.tv_sec > nowP->tv_sec ||
                 (t->time.tv_sec == nowP->tv_sec &&
                  t->time.tv_usec > nowP->tv_usec))
